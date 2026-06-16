@@ -1,29 +1,22 @@
-import { createClient } from '@supabase/supabase-js';
 import { redirect } from 'next/navigation';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
+import { supabase } from '../../lib/supabase'; // Adjust path if your lib folder is located elsewhere
 
 export default async function RedirectPage({ params }) {
-  // CRITICAL FIX: In Next.js 15+, params must be awaited
-  const { shortCode } = await params;
+  // Get the short code from the URL path
+  const { shortCode } = params;
 
+  // Find the original URL in Supabase that matches this short code
   const { data, error } = await supabase
     .from('urls')
-    .select('original_url')
+    .select('original_url') // Ensure this matches your database column name
     .eq('short_code', shortCode)
     .single();
 
+  // If there is an error or no URL found, show a message
   if (error || !data) {
-    return (
-      <div style={{ textAlign: 'center', marginTop: '50px' }}>
-        <h1>404 - Link not found</h1>
-        <p>The code "{shortCode}" does not exist.</p>
-      </div>
-    );
+    return <div>URL not found!</div>;
   }
 
+  // Redirect the user to the original long URL
   redirect(data.original_url);
 }
