@@ -5,7 +5,8 @@ export default function Home() {
   const [url, setUrl] = useState('');
   const [shortUrl, setShortUrl] = useState('');
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault(); 
     e.preventDefault();
     const shortCode = Math.random().toString(36).substring(7);
     
