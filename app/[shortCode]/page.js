@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { supabase } from '../../lib/supabase'; // Adjust path if your lib folder is located elsewhere
+import { supabase } from '../lib/supabase'; // यहाँ हमने path सही कर दिया है
 
 export default async function RedirectPage({ params }) {
   // Get the short code from the URL path
@@ -8,7 +8,7 @@ export default async function RedirectPage({ params }) {
   // Find the original URL in Supabase that matches this short code
   const { data, error } = await supabase
     .from('urls')
-    .select('original_url') // Ensure this matches your database column name
+    .select('original_url') // यह नाम आपके डेटाबेस कॉलम से मैच करना चाहिए
     .eq('short_code', shortCode)
     .single();
 
